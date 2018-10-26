@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %} | Register{% endblock title %}
+{% block main_content %}
+<div id="tabs">
+   <ul>
+        <li><a href="#register">Register</a></li>
+    </ul>
+    <div id="register" class='tab'>
+        <form method='post' class="form">
+            {% csrf_token %}
+            <table class="table">
+            {{ form.as_table }}
+            </table>
+            <input type='submit' value='Register' />
+        </form>
+    </div>
+</div>
+{% endblock %}

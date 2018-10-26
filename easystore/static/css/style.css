@@ -41,7 +41,9 @@ footer {
 #content {
     height: 80%;
     text-align: left;
+    position: relative;
 }
+
 #tabs { padding: 3em 1em; height: 100%; }
 
 div.tab {
@@ -74,4 +76,28 @@ input[type=submit] {
     width: 100px;
     height: 32px;
     margin: 2px 3px 5px 5px;
+}
+
+.login_container {
+    border: 1px solid #F36C5A !important;
+    border-radius: 2px;
+    height: 70%;
+    padding: 2em;
+    margin: 1.2em .8em 0 .8em;
+    position: relative;
+}
+
+.tab > form, .tab > p {
+	width: 362px;
+    margin: 2em auto;
+}
+
+.tab > p { float: none; clear: both; margin-top: 5em; }
+.tab > form > table { margin-bottom: 1em; width: 358px;}
+.tab > form > input { float: right; }
+
+ul.errorlist {
+    list-style-type: none;
+    font-size: small;
+    color: red;
 }

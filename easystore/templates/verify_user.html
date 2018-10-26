@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %} | Verify {% endblock title %}
+{% block main_content %}
+<div id="tabs">
+   <ul>
+        <li><a href="#verify">Verify</a></li>
+    </ul>
+    <div id="verify" class='tab'>
+        <form method='post' class="form">
+            {% csrf_token %}
+            <table class="table">
+            {{ form.as_table }}
+            </table>
+            <input type='submit' value='Verify' />
+        </form>
+    </div>
+</div>
+{% endblock %}

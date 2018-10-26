@@ -1,10 +1,14 @@
 # helloworld/urls.py
-from django.conf.urls import url
-from django.conf.urls.static import static
+from django.urls import path
+from django.contrib.auth import views as auth_views
 from easystore import views
 
 urlpatterns = [
-    url(r'^$', views.Home.as_view()),
-    url('api/upload', views.Upload.as_view()),
-    url('api/contents', views.Contents.as_view()),
+    path('', views.Home.as_view()),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('register/', views.Register.as_view(), name='register'),
+    path('verify/', views.UserVerify.as_view()),
+    path('verify/<slug:username>/', views.UserVerify.as_view(), name='verify_user'),
+    path('api/upload', views.Upload.as_view()),
+    path('api/contents', views.Contents.as_view()),
 ]

@@ -110,6 +110,9 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend'
 ]
 
+LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/'
+
 COGNITO_USER_POOL_ID = aws_config['cognito']['pool_id']
 COGNITO_APP_ID = aws_config['cognito']['app_id']
 COGNITO_ATTR_MAPPING =  {
