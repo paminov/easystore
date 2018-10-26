@@ -60,5 +60,6 @@ def get_db_secret():
             secret = json.loads(get_secret_value_response['SecretString'])
         else:
             decoded_binary_secret = base64.b64decode(get_secret_value_response['SecretBinary'])
+            return decoded_binary_secret
 
-
+    return secret

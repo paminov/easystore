@@ -13,25 +13,33 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 import configparser
 import boto3
+from easystore.helpers import get_db_secret
 
 session = boto3.Session()
+s3 = boto3.resource('s3')
+for bucket in s3.buckets.iterator():
+    if bucket.name.startswith('easystore'):
+        s3_bucket = bucket
+        break
+
 aws_credentials = session.get_credentials()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Removing config for now while attempting to read all config directly from aws
 #AWS config
-aws_config = configparser.ConfigParser()
-aws_config.read(os.getenv('aws_config', os.path.join(BASE_DIR, 'aws.ini')))
+#aws_config = configparser.ConfigParser()
+#aws_config.read(os.getenv('aws_config', os.path.join(BASE_DIR, 'aws.ini')))
 
 AWS_ACCESS_KEY_ID = aws_credentials.access_key
 AWS_SECRET_ACCESS_KEY = aws_credentials.secret_key
 AWS_TOKEN = aws_credentials.token
 
 #S3 config
-AWS_STORAGE_BUCKET_NAME = aws_config['s3']['bucket']
-AWS_S3_CUSTOM_DOMAIN = aws_config['s3']['domain']
-AWS_STATIC_LOCATION = aws_config['s3']['location']
+AWS_STORAGE_BUCKET_NAME = s3_bucket.name
+AWS_S3_CUSTOM_DOMAIN = "{}.s3.amazonaws.com".format(s3_bucket.name)
+AWS_STATIC_LOCATION = "private"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -93,14 +101,15 @@ WSGI_APPLICATION = 'ebdjango.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+db_config = get_db_secret()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-		'NAME': aws_config['rds']['dbname'],
-        'USER': aws_config['rds']['username'],
-        'PASSWORD': aws_config['rds']['password'],
-        'HOST': aws_config['rds']['host'],
-        'PORT': aws_config['rds']['port']
+		'NAME': db_config.get('dbname'),
+        'USER': db_config.get('username'),
+        'PASSWORD': db_config.get('password'),
+        'HOST': db_config.get('host'),
+        'PORT': db_config.get('port')
     }
 }
 
@@ -113,8 +122,21 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
 
-COGNITO_USER_POOL_ID = aws_config['cognito']['pool_id']
-COGNITO_APP_ID = aws_config['cognito']['app_id']
+#COGNITO_USER_POOL_ID = aws_config['cognito']['pool_id']
+#COGNITO_APP_ID = aws_config['cognito']['app_id']
+
+cognito = boto3.client('cognito-identity')
+for iden_pool in cognito.list_identity_pools(MaxResults=10)['IdentityPools']:
+    if iden_pool['IdentityPoolName'] == 'easystore':
+        identity_pool_id = iden_pool['IdentityPoolId']
+        break
+
+pool_details = cognito.describe_identity_pool(IdentityPoolId=identity_pool_id)
+
+COGNITO_USER_POOL_ID = identity_pool_id
+COGNITO_APP_ID = pool_details['CognitoIdentityProviders'][0]['ClientId']
+
+#COGNITO_APP_ID = aws_config['cognito']['app_id']
 COGNITO_ATTR_MAPPING =  {
     'email': 'email',
     'given_name': 'first_name',
