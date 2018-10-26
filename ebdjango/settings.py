@@ -11,10 +11,27 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import configparser
+import boto3
+
+session = boto3.Session()
+aws_credentials = session.get_credentials()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+#AWS config
+aws_config = configparser.ConfigParser()
+aws_config.read(os.getenv('aws_config', os.path.join(BASE_DIR, 'aws.ini')))
+
+AWS_ACCESS_KEY_ID = aws_credentials.access_key
+AWS_SECRET_ACCESS_KEY = aws_credentials.secret_key
+AWS_TOKEN = aws_credentials.token
+
+#S3 config
+AWS_STORAGE_BUCKET_NAME = aws_config['s3']['bucket']
+AWS_S3_CUSTOM_DOMAIN = aws_config['s3']['domain']
+AWS_STATIC_LOCATION = aws_config['s3']['location']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -27,7 +44,6 @@ DEBUG = bool( os.environ.get('DJANGO_DEBUG', False) )
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,16 +53,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'helloworld',
+    'django_warrant',
+    'easystore'
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -69,6 +85,8 @@ TEMPLATES = [
     },
 ]
 
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+
 WSGI_APPLICATION = 'ebdjango.wsgi.application'
 
 
@@ -77,11 +95,28 @@ WSGI_APPLICATION = 'ebdjango.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+		'NAME': aws_config['rds']['dbname'],
+        'USER': aws_config['rds']['username'],
+        'PASSWORD': aws_config['rds']['password'],
+        'HOST': aws_config['rds']['host'],
+        'PORT': aws_config['rds']['port']
     }
 }
 
+# Authentiaction
+AUTHENTICATION_BACKENDS = [
+    'django_warrant.backend.CognitoBackend',
+    'django.contrib.auth.backends.ModelBackend'
+]
+
+COGNITO_USER_POOL_ID = aws_config['cognito']['pool_id']
+COGNITO_APP_ID = aws_config['cognito']['app_id']
+COGNITO_ATTR_MAPPING =  {
+    'email': 'email',
+    'given_name': 'first_name',
+    'family_name': 'last_name',
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

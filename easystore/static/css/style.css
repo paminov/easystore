@@ -1,0 +1,77 @@
+html {
+	-webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100%;
+    background-color: #f1f1f1;
+}
+
+body {
+    margin: auto;
+    margin-top: 50px;
+    text-align: center;
+    width: 900px;
+    height: 800px;
+    border: solid #D1D1D1 1px;
+    border-radius: 3px;
+    padding: 10px 20px;
+    box-shadow: 0 0 2px 2px #E8E8E8;
+    background-color: white;
+}
+
+header {
+    border-radius: 2px;
+	display: block;
+	width: 100%;
+	background: #f1a899;
+	height: 80px;
+	color: #232323;
+}
+
+header > h2 { padding: 1em; }
+
+
+footer {
+   align:center;
+   text-align: center;
+   font-size: small;
+   color: gray;
+   margin: 5px auto;
+}
+
+#content {
+    height: 80%;
+    text-align: left;
+}
+#tabs { padding: 3em 1em; height: 100%; }
+
+div.tab {
+    border: 1px solid #F36C5A !important;
+    border-radius: 2px;
+    height: 70%;
+}
+
+input {
+    outline: none;
+    border: lightgray solid 1px;
+    border-radius: 1px;
+    width: 80%;
+    margin: 3px 0;
+    height: 29px;
+    padding: 0.2em 2.1em 0.2em 1em;
+    float: none;
+}
+
+input:focus { border: #8690c1 solid 1px; }
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+input[type=submit] {
+    width: 100px;
+    height: 32px;
+    margin: 2px 3px 5px 5px;
+}

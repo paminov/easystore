@@ -1,0 +1,8 @@
+*.swp
+*.sw
+*.ini
+__pycache__
+*.pyc
+.DS_Store
+.project
+.pydevproject

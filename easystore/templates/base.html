@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>EasyStore</title>
+        <link rel="stylesheet" id="ample-style-css" href="{% static 'css/normalize.css' %}" type="text/css" media="all">
+        <link rel="stylesheet" id="ample-style-css" href="{% static 'css/style.css' %}" type="text/css" media="all">
+        <link rel="stylesheet" id="ample-style-css" href="{% static 'css/jquery-ui.css' %}" type="text/css" media="all">
+        <script src="{% static 'js/jquery.js' %}"></script>
+    </head>
+    <body>
+        <header>
+            <h2>EasyStore</h2>
+        </header>
+        <div id="content">
+            <div id="tabs">
+                <ul>
+                    <li><a href="#upload">Upload</a></li>
+                    <li><a href="#view">View</a></li>
+	    	    </ul>
+                <div id="view" class="tab"></div>
+                <div id="upload" class="tab">
+                    <p>Select file to upload. <br/>
+                    NOTE: Files with the same name get updated.</p>
+                    <input id="file" value="No file selected"></input>
+                    <input type="file" value="filepath" hidden></input>
+                    <input type="submit" value="Upload"></input>
+                </div>
+            </div>
+        </div>
+        <script src="{% static 'js/jquery-ui.js' %}"></script>
+        <script  type="text/javascript">
+	    $(document).ready(function(){
+            var $file = $('#file'),
+                $fhidden = $('input[type=file]'),
+                $upload_btn = $('input[type=submit]');
+            $('#tabs').tabs({
+                create: function() {
+                    $(this).removeClass('ui-widget ui-widget-content ');
+                    $(this).find('section').removeClass('ui-tabs-panel ui-widget-content ui-corner-bottom')
+                    $(this).find('ul').removeClass('ui-widget-header')
+                }
+            });
+
+            $fhidden.change(function(){
+                if ($(this).val()===""){
+                    $file.val("No file selected").blur()
+                } else {
+                    $file.val($(this).val()).blur();
+                }
+                $upload_btn.trigger('focus');
+            });
+
+            $file.focus(function(){
+                $fhidden.click();
+
+            });
+
+            $upload_btn.button()
+        })
+        </script>
+    <footer>
+        <p> EasyStore <strong>|</strong> CMPE 281 Project 1 <strong>|</strong> by Parvizsho Aminov </p>
+    </footer>
+    </body>
+</html>
