@@ -14,6 +14,9 @@
             <input type='submit' value='Login' />
         </form>
         <p>Don't have an account? <a href="{% url 'register' %}">Click here</a> to register.</p>
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
     </div>
 </div>
+
+
 {% endblock %}

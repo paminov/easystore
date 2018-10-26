@@ -101,3 +101,13 @@ ul.errorlist {
     font-size: small;
     color: red;
 }
+
+.g-signin2 > div {
+    box-shadow: 0 0 0;
+}
+.g-signin2 {
+    margin: auto;
+    width: 120px;
+    border: solid 1px lightgray;
+    border-radius: 3px;
+}
