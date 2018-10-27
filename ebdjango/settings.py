@@ -26,6 +26,7 @@ aws_credentials = session.get_credentials()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+COGNITO_REGION = 'us-west-2'
 
 # Removing config for now while attempting to read all config directly from aws
 #AWS config
@@ -61,7 +62,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_warrant',
     'easystore'
 ]
 
@@ -125,7 +125,7 @@ LOGIN_REDIRECT_URL = '/'
 #COGNITO_USER_POOL_ID = aws_config['cognito']['pool_id']
 #COGNITO_APP_ID = aws_config['cognito']['app_id']
 
-cognito = boto3.client('cognito-identity')
+cognito = boto3.client('cognito-identity', region_name=COGNITO_REGION)
 for iden_pool in cognito.list_identity_pools(MaxResults=10)['IdentityPools']:
     if iden_pool['IdentityPoolName'] == 'easystore':
         identity_pool_id = iden_pool['IdentityPoolId']
