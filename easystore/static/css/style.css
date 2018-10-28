@@ -38,6 +38,17 @@ footer {
    margin: 5px auto;
 }
 
+user {
+    float: right;
+    padding: 10px;
+    color: #333333;
+    position: absolute;
+    display: block;
+    z-index: 9999;
+    width: 880px;
+    text-align: right;
+}
+
 #content {
     height: 80%;
     text-align: left;
