@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, resolve_url
 from django.views.generic import TemplateView, FormView
 from django.urls import reverse
 from .forms import RegisterForm, UserVerifyForm
-from .backend import CognitoBackend
+from django_warrant.backend import CognitoBackend
 import pdb
 
 

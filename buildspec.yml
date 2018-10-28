@@ -5,6 +5,7 @@ phases:
     commands:
       # Install dependencies needed for running tests
       - pip install -r requirements.txt
+      - pip install git+https://github.com/paminov/django-warrant.git
 
   pre_build:
     commands:
