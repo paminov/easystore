@@ -3,20 +3,24 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="google-signin-client_id" content="508086297696-hl86nm94180c0pv7f0aucrsnpfqt0eh4.apps.googleusercontent.com">
+        <meta name="google-signin-client_id" content="508086297696-t75vsg5vugl5u6q4pds7mfu9joe9bekj.apps.googleusercontent.com">
         <title>EasyStore{% block title %}{% endblock %}</title>
         <link rel="stylesheet" id="ample-style-css" href="{% static 'css/normalize.css' %}" type="text/css" media="all">
         <link rel="stylesheet" id="ample-style-css" href="{% static 'css/style.css' %}" type="text/css" media="all">
         <link rel="stylesheet" id="ample-style-css" href="{% static 'css/jquery-ui.css' %}" type="text/css" media="all">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.dataTables.css' %}">
         <script src="{% static 'js/jquery.js' %}"></script>
         <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script type="text/javascript" charset="utf8" src="{% static 'js/jquery.dataTables.js' %}"></script>
     </head>
     <body>
         <header>
             <h2>EasyStore</h2>
         </header>
         {% if user.is_authenticated %}
-            <user>Welcome, <strong>{{ user.get_full_name }}</strong> - <a href="{% url 'logout' %}">Logout</a></user>
+            <user>Welcome{% if user.is_superuser %} Admin{% endif %},
+                    <strong>{{ user.get_full_name }}</strong> - <a href="{% url 'logout' %}">Logout</a>
+            </user>
         {% else %}
             <user>Welcome, Guest. <a href="{% url 'login' %}">Login</a></user>
         {% endif %}

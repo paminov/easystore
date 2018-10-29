@@ -27,11 +27,6 @@ aws_credentials = session.get_credentials()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Removing config for now while attempting to read all config directly from aws
-#AWS config
-#aws_config = configparser.ConfigParser()
-#aws_config.read(os.getenv('aws_config', os.path.join(BASE_DIR, 'aws.ini')))
-
 AWS_ACCESS_KEY_ID = aws_credentials.access_key
 AWS_SECRET_ACCESS_KEY = aws_credentials.secret_key
 AWS_TOKEN = aws_credentials.token
@@ -41,7 +36,7 @@ AWS_USER_POOL_REGION = 'us-west-2'
 #S3 config
 AWS_STORAGE_BUCKET_NAME = s3_bucket.name
 AWS_S3_CUSTOM_DOMAIN = "{}.s3.amazonaws.com".format(s3_bucket.name)
-AWS_STATIC_LOCATION = "private"
+AWS_S3_LOCATION = "private"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -117,14 +112,11 @@ DATABASES = {
 # Authentiaction
 AUTHENTICATION_BACKENDS = [
     'django_warrant.backend.CognitoBackend',
-    'django.contrib.auth.backends.ModelBackend'
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
-
-#COGNITO_USER_POOL_ID = aws_config['cognito']['pool_id']
-#COGNITO_APP_ID = aws_config['cognito']['app_id']
 
 cognito = boto3.client('cognito-idp', region_name=AWS_USER_POOL_REGION)
 for user_pool in cognito.list_user_pools(MaxResults=10)['UserPools']:
@@ -137,10 +129,16 @@ for up_client in cognito.list_user_pool_clients(UserPoolId=user_pool_id,
     if up_client['ClientName'] == 'easystore':
         user_client_id = up_client['ClientId']
 
+cognit_idp = boto3.client('cognito-identity', region_name=AWS_USER_POOL_REGION)
+for iden_pool in cognit_idp.list_identity_pools(MaxResults=10)['IdentityPools']:
+    if iden_pool['IdentityPoolName'] == 'easystore':
+        identity_pool_id = iden_pool['IdentityPoolId']
+        break
+
+COGNITO_IDENTITY_POOL = identity_pool_id
 COGNITO_USER_POOL_ID = user_pool_id
 COGNITO_APP_ID = user_client_id
 
-#COGNITO_APP_ID = aws_config['cognito']['app_id']
 COGNITO_ATTR_MAPPING =  {
     'email': 'email',
     'given_name': 'first_name',

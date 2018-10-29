@@ -1,8 +1,10 @@
-import os
+from django.conf import settings
 import boto3
 import base64
 from botocore.exceptions import ClientError
 import json
+from jose import jwt
+import os
 
 cognito_url = "https://easystore.auth.us-west-2.amazoncognito.com"
 app_id = os.getenv("APP_ID")
@@ -63,3 +65,6 @@ def get_db_secret():
             return decoded_binary_secret
 
     return secret
+
+def get_cognito_user_details(session):
+    return jwt.get_unverified_claims(session['ACCESS_TOKEN'])

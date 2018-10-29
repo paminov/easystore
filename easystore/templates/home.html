@@ -1,25 +1,54 @@
 {% extends 'base.html' %}
-{% block title %} | Home{% endblock title %}
+{% block title %} | Home {% endblock title %}
 {% block main_content %}
 <div id="tabs">
     <ul>
-        <li><a href="#upload">Upload</a></li>
         <li><a href="#view">View</a></li>
+        <li><a href="#upload">Upload</a></li>
     </ul>
-    <div id="view" class="tab"></div>
+    <div id="view" class="tab">
+        <table id="files" class="stripe">
+          <thead>
+            <tr>
+              <th>Filename</th>
+              <th>Uploaded at</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for document in documents %}
+              <tr>
+                <td><a href="{{ document.file.url }}" target="_blank">{{ document.name }}</a></td>
+                <td>{{ document.upload_time }}</td>
+                <td>{{ document.description }}</td>
+                <td>
+                    <div name="{{ document.name }}" fid="{{ document.id }}" class='download'></div>
+                    <div name="{{ document.name }}" fid="{{ document.id }}" class='edit'></div>
+                    <div name="{{ document.name }}" fid="{{ document.id }}" class='delete'></div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4">You don't have any files</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
     <div id="upload" class="tab">
-        <p>Select file to upload. <br/>
-        NOTE: Files with the same name get updated.</p>
-        <input id="file" value="No file selected"/>
-        <input type="file" value="filepath" hidden/>
-        <input type="submit" value="Upload">
+        <p style=" font-size: 14px; font-style: italic;">Select file to upload. <br/>
+        NOTE: Files with the same name will be replaced.</p>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type="submit" value='Upload'></input>
+        </form>
     </div>
 </div>
 <script  type="text/javascript">
 $(document).ready(function(){
-    var $file = $('#file'),
-        $fhidden = $('input[type=file]'),
-        $upload_btn = $('input[type=submit]');
+    $('#id_userid').parent('p').remove();
     $('#tabs').tabs({
         create: function() {
             $(this).removeClass('ui-widget ui-widget-content ');
@@ -28,21 +57,77 @@ $(document).ready(function(){
         }
     });
 
-    $fhidden.change(function(){
-        if ($(this).val()===""){
-            $file.val("No file selected").blur();
-        } else {
-            $file.val($(this).val()).blur();
-        }
-        $upload_btn.trigger('focus');
+    $('input[type=submit]').button();
+    $('#files').DataTable({
+        scrollY: "300px",
+        columnDefs: [
+            { width: '20%', targets: 1 },
+            { width: '22%', targets: 3 }
+        ],
     });
-
-    $file.focus(function(){
-        $fhidden.click();
-
+    $('.download').button({ icon: "ui-icon-circle-arrow-s" });
+    $('.edit').button({ icon: "ui-icon-pencil" }).click(function(){
+        var name = $(this).attr('name'),
+            fid = $(this).attr('fid');
+        $.get('/api/contents/', data={id: fid}, function(res){
+            var $textarea = $('<textarea></textarea>'),
+                $csrf_token = $('{% csrf_token %}');
+            $textarea.css({width:'100%', height:'96%'});
+            $textarea.text(res.content);
+            $('<div title="Edit '+name+'"></div>').append($textarea).dialog({
+                width: 800,
+                height: 400,
+                buttons: [
+                  {
+                      text: "Cancel",
+                      click: function() {
+                        $( this ).dialog( "close" );
+                        $( this ).dialog( "destroy" );
+                      },
+                  },
+                  {
+                      text: 'Save',
+                      click: function() {
+                          $.post('/api/contents/', 
+                          data={
+                              id:fid, 
+                              contents:$textarea.val(),
+                              csrfmiddlewaretoken: $csrf_token.val()
+                            },
+                          function(response){
+                              
+                          });
+                          $( this ).dialog( "close" );
+                          $( this ).dialog( "destroy" );
+                      }
+                  }
+                ]
+            });
+        });
     });
-
-    $upload_btn.button();
+    $('.delete').button({ icon: "ui-icon-trash", classes: { "ui-button": "ui-state-error"} }).click(function(){
+        var name = $(this).attr('name'),
+            fid = $(this).attr('fid');
+        $.get( '/api/delete/', data={'id': fid}, function(res){
+            $('<div title="Deleted"><p>'+ name + ' successfully deleted!' +
+               '</p></div>').dialog({
+                   closeOnEscape: true,
+                   close: function() {
+                       location.href = '/';
+                       $( this ).dialog( "destroy" );
+                   }
+               });
+        }).fail(function(){
+            $('<div title="Failed"><p> Failed to delete '+ name + 
+                '. Please try again later.' +
+               '</p></div>').dialog({
+                   closeOnEscape: true,
+                   close: function() {
+                       $( this ).dialog( "destroy" );
+                   }
+               });
+        });
+    });
 });
 </script>
 {% endblock %}
