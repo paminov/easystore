@@ -16,4 +16,5 @@ urlpatterns = [
          name='verify_user'),
     path('api/delete/', views.Delete.as_view(), name='delete'),
     path('api/contents/', views.Contents.as_view(), name='contents'),
+    path('health/', views.health, name='health')
 ]

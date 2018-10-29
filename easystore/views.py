@@ -17,6 +17,10 @@ from .helpers import get_cognito_user_details
 import pdb
 
 
+def health(request):
+    return JsonResponse('all is well', safe=False)
+
+
 class BaseView(LoginRequiredMixin, TemplateView):
 
     def verify_logged_in(self, request):
