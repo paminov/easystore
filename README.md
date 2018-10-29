@@ -4,7 +4,7 @@ EasyStore - CMPE 281 Project 1
 * University: http://www.sjsu.edu/
 * Course: Cloud Technologies
 * Professor Sanjay Garje
-* ISA: Anushri Srinath Aithal 
+* ISA: Anushri Srinath Aithal
 * Student: Parvizsho Aminov
 
 
@@ -23,3 +23,17 @@ Features
 * File upload / download / delete
 * Online text file editing
 
+
+Login Screen
+------------
+![login image](https://raw.githubusercontent.com/paminov/easystore/master/demo/login.png)
+
+
+Browse Files Screen
+-------------------
+![login image](https://raw.githubusercontent.com/paminov/easystore/master/demo/files.png)
+
+
+Upload Files Screen
+-------------------
+![login image](https://raw.githubusercontent.com/paminov/easystore/master/demo/upload.png)
