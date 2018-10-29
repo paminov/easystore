@@ -63,7 +63,14 @@ div.tab {
     height: 70%;
 }
 
-input {
+input[type=submit] {
+    width: 100px !important;
+    height: 32px;
+    margin: 2px 3px 5px 5px;
+}
+
+#id_username, #id_password,
+#register input:not([type=submit]) {
     outline: none;
     border: lightgray solid 1px;
     border-radius: 1px;
@@ -83,12 +90,6 @@ button:focus {
     outline: none;
 }
 
-input[type=submit] {
-    width: 100px;
-    height: 32px;
-    margin: 2px 3px 5px 5px;
-}
-
 .login_container {
     border: 1px solid #F36C5A !important;
     border-radius: 2px;
@@ -106,6 +107,27 @@ input[type=submit] {
 .tab > p { float: none; clear: both; margin-top: 5em; }
 .tab > form > table { margin-bottom: 1em; width: 358px;}
 .tab > form > input { float: right; }
+
+#upload > p,
+#upload > form {
+    width: 100%;
+    margin: 0;
+}
+
+#upload form textarea {
+    width: 99%;
+    height: 40px;
+    border: 1px solid lightgray;
+    border-radius: 2px;
+}
+
+div.delete,
+div.edit,
+div.download {
+    width: 15px;
+    height: 15px;
+    margin: 0;
+}
 
 ul.errorlist {
     list-style-type: none;
