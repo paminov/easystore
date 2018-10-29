@@ -6,6 +6,8 @@ phases:
       # Install dependencies needed for running tests
       - pip install -r requirements.txt
       - pip install git+https://github.com/paminov/django-warrant.git
+      - python manage.py makemigrations easystore
+      - python manage.py migrate
 
   pre_build:
     commands:
