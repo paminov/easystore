@@ -29,8 +29,9 @@ AWS_USER_POOL_REGION = 'us-west-2'
 
 #S3 config
 AWS_STORAGE_BUCKET_NAME = s3_bucket.name
-AWS_S3_CUSTOM_DOMAIN = "{}.s3.amazonaws.com".format(s3_bucket.name)
+AWS_S3_CUSTOM_DOMAIN = "esfiles.pomafocus.com"
 AWS_S3_LOCATION = "private"
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
