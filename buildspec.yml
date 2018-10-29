@@ -4,7 +4,6 @@ phases:
   install:
     commands:
       # Install dependencies needed for running tests
-      - yum install -y git
       - pip install -r requirements.txt
       - pip install git+https://github.com/paminov/django-warrant.git
       - python manage.py makemigrations easystore
