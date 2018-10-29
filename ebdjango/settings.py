@@ -22,14 +22,8 @@ for bucket in s3.buckets.iterator():
         s3_bucket = bucket
         break
 
-aws_credentials = session.get_credentials()
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-AWS_ACCESS_KEY_ID = aws_credentials.access_key
-AWS_SECRET_ACCESS_KEY = aws_credentials.secret_key
-AWS_TOKEN = aws_credentials.token
 
 AWS_USER_POOL_REGION = 'us-west-2'
 
