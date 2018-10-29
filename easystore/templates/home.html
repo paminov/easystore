@@ -3,7 +3,7 @@
 {% block main_content %}
 <div id="tabs">
     <ul>
-        <li><a href="#view">View</a></li>
+        <li><a href="#view">{% if user.is_superuser %}Admin {% endif %}View</a></li>
         <li><a href="#upload">Upload</a></li>
     </ul>
     <div id="view" class="tab">
@@ -19,11 +19,15 @@
           <tbody>
             {% for document in documents %}
               <tr>
+                {% if user.is_superuser %}
+                <td><a href="{{ document.file.url }}" target="_blank">{{ document.file.name }}</a></td>
+                {% else %}
                 <td><a href="{{ document.file.url }}" target="_blank">{{ document.name }}</a></td>
+                {% endif %}
                 <td>{{ document.upload_time }}</td>
                 <td>{{ document.description }}</td>
                 <td>
-                    <div name="{{ document.name }}" fid="{{ document.id }}" class='download'></div>
+                    <a href="{{ document.file.url }}" class='download'></a>
                     <div name="{{ document.name }}" fid="{{ document.id }}" class='edit'></div>
                     <div name="{{ document.name }}" fid="{{ document.id }}" class='delete'></div>
                 </td>
