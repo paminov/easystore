@@ -4,6 +4,7 @@ phases:
   install:
     commands:
       # Install dependencies needed for running tests
+      - yum install -y git
       - pip install -r requirements.txt
       - pip install git+https://github.com/paminov/django-warrant.git
       - python manage.py makemigrations easystore
@@ -12,7 +13,6 @@ phases:
   pre_build:
     commands:
       - python manage.py test
-
       - aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template-file template-export.yml
 artifacts:
   type: zip
